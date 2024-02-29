@@ -1,0 +1,17 @@
+# Ignore MacBook files
+.DS_Store
+
+# Ignore virtual environment
+venv/
+
+# Ignore python cache
+__pycache__/
+
+# Ignore Screenshots
+Screenshot*
+
+# Ignore data in data/input/ but keep the three key images from the project
+data/input/*
+!data/input/cameraman.tif
+!data/input/fishingboat.tif
+!data/input/lena.bmp
