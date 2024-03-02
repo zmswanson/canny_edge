@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge Detection App</title>
+</head>
+<body>
+    <h1>Edge Detection App</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="gaussian_blur" style="display: inline-block; width: 210px;">Gaussian Blur ({{ settings['gaussian_blur'] if 'gaussian_blur' in settings else request.form['gaussian_blur'] }})</label>
+        <input type="range" name="gaussian_blur" min="1" max="50" value="{{ settings['gaussian_blur'] if 'gaussian_blur' in settings else request.form['gaussian_blur'] }}" step="1" oninput="updateLabel('gaussian_blur')"><br>
+        
+        <label for="kernel_size" style="display: inline-block; width: 210px;">Gaussian Kernel Size ({{ settings['kernel_size'] if 'kernel_size' in settings else request.form['kernel_size'] }})</label>
+        <input type="range" name="kernel_size" min="3" max="15" value="{{ settings['kernel_size'] if 'kernel_size' in settings else request.form['kernel_size'] }}" step="2" oninput="updateLabel('kernel_size')"><br>
+        
+        <label for="kernel_type" style="display: inline-block; width: 210px;">Kernel Type:</label>
+        <select name="kernel_type" style="display: inline-block; width: 130px;">
+            <option value="SOBEL" {{ 'selected' if 'kernel_type' in settings and settings['kernel_type'] == 'SOBEL' else '' }}>Sobel</option>
+            <option value="PREWITT" {{ 'selected' if 'kernel_type' in settings and settings['kernel_type'] == 'PREWITT' else '' }}>Prewitt</option>
+            <option value="SCHARR" {{ 'selected' if 'kernel_type' in settings and settings['kernel_type'] == 'SCHARR' else '' }}>Scharr</option>
+        </select><br>
+
+        <label for="neighbor_depth" style="display: inline-block; width: 210px;">Neighbor Depth ({{ settings['neighbor_depth'] if 'neighbor_depth' in settings else request.form['neighbor_depth'] }})</label>
+        <input type="range" name="neighbor_depth" min="1" max="5" value="{{ settings['neighbor_depth'] if 'neighbor_depth' in settings else request.form['neighbor_depth'] }}" step="1" oninput="updateLabel('neighbor_depth')"><br>
+        
+        <label for="pixel_connectivity" style="display: inline-block; width: 210px;">Kernel Type:</label>
+        <select name="pixel_connectivity" style="display: inline-block; width: 130px;">
+            <option value="FOUR_CONNECTED" {{ 'selected' if 'pixel_connectivity' in settings and settings['pixel_connectivity'] == 'FOUR_CONNECTED' else '' }}>FOUR_CONNECTED</option>
+            <option value="EIGHT_CONNECTED" {{ 'selected' if 'pixel_connectivity' in settings and settings['pixel_connectivity'] == 'EIGHT_CONNECTED' else '' }}>EIGHT_CONNECTED</option>
+        </select><br>
+
+        <label for="high_threshold" style="display: inline-block; width: 210px;">High Threshold ({{ settings['high_threshold'] if 'high_threshold' in settings else request.form['high_threshold'] }})</label>
+        <input type="range" name="high_threshold" min="0.0" max="1.0" value="{{ settings['high_threshold'] if 'high_threshold' in settings else request.form['high_threshold'] }}" step="0.01" oninput="updateLabel('high_threshold')"><br>
+
+        <label for="low_threshold" style="display: inline-block; width: 210px;">Low Threshold ({{ settings['low_threshold'] if 'low_threshold' in settings else request.form['low_threshold'] }})</label>
+        <input type="range" name="low_threshold" min="0.0" max="1.0" value="{{ settings['low_threshold'] if 'low_threshold' in settings else request.form['low_threshold'] }}" step="0.01" oninput="updateLabel('low_threshold')"><br>
+
+        <label for="max_hysteresis_iterations" style="display: inline-block; width: 210px;">Max Hysteresis Iterations ({{ settings['max_hysteresis_iterations'] if 'max_hysteresis_iterations' in settings else request.form['max_hysteresis_iterations'] }})</label>
+        <input type="range" name="max_hysteresis_iterations" min="1" max="1000" value="{{ settings['max_hysteresis_iterations'] if 'max_hysteresis_iterations' in settings else request.form['max_hysteresis_iterations'] }}" step="1" oninput="updateLabel('max_hysteresis_iterations')"><br>
+    
+        <label for="image_file">Image File:</label>
+        <input type="file" name="image_file" accept="image/*"><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+    
+
+{% if result_images %}
+    <h2>Processed Images:</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1000px">
+        {% set counter = 0 %}
+        {% for result_base64, label in result_images %}
+            <div style="flex: 0 0 33%; padding: 1px;">
+                <p>{{ label }}</p>
+                <img src="data:image/jpeg;base64,{{ result_base64 }}" alt="Processed Image" style="width: 100%;">
+            </div>
+            {% set counter = counter + 1 %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+    <script>
+        function updateLabel(sliderName) {
+            var slider = document.getElementsByName(sliderName)[0];
+            var label = document.querySelector('label[for=' + sliderName + ']');
+            // label.innerHTML = sliderName.charAt(0).toUpperCase() + sliderName.slice(1) + ' (' + slider.value + '):'; -->
+            label.innerHTML = label.innerHTML.split(' (')[0] + ' (' + slider.value + ')';
+        }
+    </script>
+</body>
+</html>

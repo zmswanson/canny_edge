@@ -12,6 +12,12 @@ Screenshot*
 
 # Ignore data in data/input/ but keep the three key images from the project
 data/input/*
+data/simulated/
+data/output/
 !data/input/cameraman.tif
 !data/input/fishingboat.tif
 !data/input/lena.bmp
+
+# Ignore files for the assignment submission
+processed_examples/*
+swanson_python1_submission.zip
